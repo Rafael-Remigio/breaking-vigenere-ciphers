@@ -1,0 +1,21 @@
+Propriedades de Segurança
+
+A criptografia é aplicada para fornecer garantias referentes a determinadas propriedades da segurança da informação:
+
+CONFIDENCIALIDADE
+
+Garantir que somente as partes autorizadas possuem acesso ao conteúdo destinado a estas partes, isto está relacionado à proteção das informações contra divulgação a terceiros não autorizados.
+
+AUTENTICIDADE
+
+Associar um conteúdo a uma parte e ter certeza que o conteúdo ou a parte é quem realmente diz ser.
+
+INTEGRIDADE
+
+Ser capaz de identificar alterações do estado original de uma determinada informação, seja pela remoção ou acréscimo de bits nestes dados. No entanto, a integridade não serve para evitar uma alteração, apenas identifica quando uma alteração ocorreu em um ou mais dados.
+
+NÃO REPÚDIO
+
+Associar uma parte a uma ação de modo que essa parte não possa negar a autoria da ação. Para garantir o não repúdio é necessário que haja uma forma de vincular algo a apenas uma única parte. Uma chave privada realiza muito bem esta função e você entenderá logo a seguir.
+
+É importante entender que a criptografia não garante todas estas propriedades, cada propriedade é garantida de acordo com o processo criptográfico aplicado, juntamente com as propriedades que cada informação necessita garantir.
