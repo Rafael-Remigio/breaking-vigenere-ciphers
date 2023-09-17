@@ -177,3 +177,22 @@ def index_of_coincidence(text):
         total += counts[i]
     return 26*numer / (total*(total-1))
 ```
+
+There is a script available to check the probable period of a ciphertext using this IoC method
+
+Usage:
+```
+$ python3 key_length_calculation.py clean_1.txt 
+Baseline IOC from book
+book: booksInTXT/romeo_and_juliet_cleaned.txt IOC: 1.6715661632909653
+qt5ct: using qt5ct plugin
+{2: 1.088655660277848, 3: 1.3541267338843497, 4: 1.0888605234824298, 5: 1.0857164455773078, 6: 1.3559690783035327, 7: 1.0898770500626875, 8: 1.0870691162462136, 9: 2.089446374640321, 10: 1.0833876059311485, 11: 1.084084192560757, 12: 1.3556715312568206, 13: 1.086472279848258, 14: 1.0894089784886558, 15: 1.3453340151179372, 16: 1.0843319038178216, 17: 1.0826014356331821, 18: 2.097179818414033, 19: 1.0823580080060753, 20: 1.0789435163934382}
+```
+Plot generated from script:
+<img src="images/cipher-IoC-1.png">
+
+
+
+**Example of a plot using random strings**
+<img src="images/random-IoC.png">
+<img src="images/random-IoC-2.png">
