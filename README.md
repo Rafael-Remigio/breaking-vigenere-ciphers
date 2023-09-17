@@ -125,3 +125,55 @@ $ python3 vigenere_decryption.py ciphertext LMAO
 
 THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG
 ```
+
+
+
+# Breaking PolyAlphabetic Ciphers
+
+## Finding the Key Length
+
+Kasiki's test and the index of coincidence are used to attack a Vigenère cipher (or other polyalphabetic ciphers with small alphabet and small key size) - they both try to get the length of the keyword.
+
+### Kasiki's Test
+
+Kasiki's test gets probable prime factors of the keyword length, while the coincidence index test gets us an estimation of the absolute length of the keyword.
+
+With a long enought ciphertext and for a small key this analysis can be proven to be extremelly usefull.
+
+We look at repeated sequences of three or more characters, and at which distances they occur. We collect all these distances, and look at the prime factors of these.
+
+The idea is that probably such a repeated sequence comes from the same plain text sequence, which then randomly hit the same keyword position. They will only hit the same position if their distance is a multiple of the keyword length.
+
+There might be false positives so the analysis of the key length might require a litle bit of trial and error.
+
+### Index of Coincidence
+
+The index of coincidence (IoC) measures the likelihood that any two characters of a text are the same. The formula for the IoC is:
+
+<img src="images/IoC-Formula.png">
+
+**n** is the size of the alphabet, **ml** the number of occurrences for the character **l**, **k** the total size of the text.
+
+With this we can calculate the IoC of several text. A random text has an IoC close to 1, while English text is close to 1.7.
+
+Comparing this with our ciphertext we can subdivide it in periods and test the IoC of each period. This is, comparing the IoC of each letter at an interval equal to the proposed period
+
+The code for calculating the IoC is:
+
+<small>this code was taken from Five Ways to Crack a Vigenère Cipher by The Mad Doctor ("madness"), I liked it so i "stole" it</small>
+
+```
+# Alphabet used only contains CAPPS letters
+ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # 26 letters in size
+
+def index_of_coincidence(text):
+    counts = [0]*26
+    for char in text:
+        counts[ALPHABET.index(char)] += 1
+    numer = 0
+    total = 0
+    for i in range(26):
+        numer += counts[i]*(counts[i]-1)
+        total += counts[i]
+    return 26*numer / (total*(total-1))
+```
