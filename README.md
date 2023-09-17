@@ -196,3 +196,50 @@ Plot generated from script:
 **Example of a plot using random strings**
 <img src="images/random-IoC.png">
 <img src="images/random-IoC-2.png">
+
+
+
+
+
+### Testing the IoC analysis technique to discover periods
+
+First we need to pick a plaintext to encrypt with a key.
+
+The text will be the english_example_3.txt in this repo. The key will have size 5 and will CTFUA
+
+```
+$ python3 vigenere_encryption.py cleanPlainText/english_example_3.txt CTFUA
+CPJYKDXKIRGAJLHWLGUNFWNYSNHSHIGTQCCJTSAEUMMYPNTSMFQKMCSHNSYRCEYBEHNSYRCEXBEJTIYNXBXCOPXICSVHTVIILMYTJBSESKMNMTQHHIMRENWAVXIUTJXWUNPNFFMGXYCNIPNNHVAJGAPPMIHCLGYEPWTCNIFTMTQYYBEREFHNKGLMHGLFSSUBYXOYGNBAXXYITCEPNOAHZUBQNYMOOXYBIPZXBEKLRUKKGLWHCGLYSDXHUUUXXBEDXQCEXXXMHGAFMTKFJNOOTPYTJXRBETAZMBCGICSPHYYVGGXCCMTSXBGLNXEUAJMMWAFGMCWFFIUAJVEITSQOTDNHGQGYBEREFHAFXHUDGXFLLKXWCNTXXJOPLJNOEHZHSGEFHDUAJMCQFJNOTXLURFBYUSRTWNOHANMRQNYCNGNUEEGISITUHICFHXWYNVYWIMJXQJIPZMCMYBYBHKLRYDUMMYRGTWYJWLYMOOXYBIPZXSOWAFPEVHIISJXXUYULMYIUGTNPNTSHIPZMCSHNSYRCEGYCCNXYSJXYBIPDXBEKLLIIPZYIDKXGOTDXHUUUXXBEJTXENQPSBIOLNHCGLMYWCLFMMCEQWHKEIUNFTUURVHKBETMMCNMLMYIUZTCNIMTFIXXKIRGOJLHGKRYEVBSAWKMMNHGFFHPNTSHIPZMYRJNXVAPWXZUPXWULDHGAUPGJFLVTPYSREFWETBLBTDXKIRGFJGOTBFFDCRBYEMXSXIPPMYNJXLIEUUFWKVHYBEQYKCCGHSNUGLIUYOTDBEVXQFSOXRVETLTZHKLXNAHYYBAVMMYYTXLIIPZYIHCOJNOUVWUPCZTIDRTWNOHMMYPNTSNHGRAYSQIFCNUMFEIPZQSCTTKNEFMMYNCYYYRYHWEHGZJNSCVFFLHKTGLQGSCEDHGMHGLFSSKCZMTYTSNTQFFEEAHZUWCKJNHCMROHCFRUDJTXAOVTQCTVEJWONWNNSPHYBIPZYIWQKWSADHZNBWMFMARKJWAWMNINKFLIIPZYITCDJBIOMTNHGATMPKMFFTQZJNCJXHEEFHZN
+```
+
+**Resuls**
+```
+$ python3 key_length_calculation.py encrypted 
+Baseline IOC from book
+book: booksInTXT/romeo_and_juliet_cleaned.txt IOC: 1.6715661632909653
+qt5ct: using qt5ct plugin
+{2: 1.0928592668110955, 3: 1.0962979694183839, 4: 1.096765498652291, 5: 1.7577661264016178, 6: 1.1077654280377571, 7: 1.0971966339690287, 8: 1.1166552745500113, 9: 1.09172658391668, 10: 1.7498776565819412, 11: 1.0960834607606176, 12: 1.1205115862225512, 13: 1.0971845829569409, 14: 1.0849624060150376, 15: 1.7795515119703726, 16: 1.1008141112618723, 17: 1.0419328669243124, 18: 1.0949130895945622, 19: 1.0858509911141492, 20: 1.784835779175402}
+```
+<img src="images/encrypted-example.png">
+
+We can conclud that the key is probably 5.
+
+
+## We got the period, now what?
+
+Well there are two approaches now:
+* **Pure Brute-Force**
+* **Dictionary Attacks** (only usefull if we know the key is a word)
+
+Both of these method will generate a lot of plaintexts so we need a way to determine if the decryption worked and we generated english text. For this there I also see two solutions:
+* Parse the text and validate if we find a large number of english words in it. If so it's probably english
+* The other method is calculating the ***fitness*** of a given text. (Again I am "stealing" this from Five Ways to Crack a Vigenère Cipher by The Mad Doctor ("madness")). As defined in the paper: 
+    ``` 
+    Fitness is a way to quantify how closely a piece of text resembles English text. One way to do this is to
+    compare the frequencies of tetragrams in the text with the frequency table that we built in the last
+    section. It turns out that throwing in a logarithm helps, too. The basic idea is to start with zero and add
+    the log of the value from our table for each tetragram that we find in the text that we are evaluating,
+    then divide by the number of tetragrams to get an average. The average is more useful than the total
+    because it allows our programs to make decisions independent of the length of the text. Defined in this
+    way, the fitness of English texts is typically around -9.6." 
+    ```
