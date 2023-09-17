@@ -240,6 +240,37 @@ Both of these method will generate a lot of plaintexts so we need a way to deter
     In the paper it is done with tetagrams but it can also be preformed with other length of combinations. 
 
 
+    **Code Example**
+
+    ```
+    # Alphabet used only contains CAPPS letters
+    ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+    # Calculate fitness of a certain text with a certain length
+    # [baseline] is used for generating the baseline frequencies for each combination of letters
+    # [baseline] should be a big enough text so that it is representative of the language 
+    def fitness(base_line_text: str,text:str,length:int):
+
+    result = 0
+    
+    baseline_frequencies = calculateFrequencies(base_line_text,length)
+
+    for i in range(len(text)-(length-1)):
+        # generate tetragram, trigram, (...), from current position
+        xgram = text[i:i+length]
+
+        # get frequencies of such xgram
+        if xgram not in  baseline_frequencies:
+            result += -15 # some large negative number
+        else:
+            y = baseline_frequencies.get(xgram)
+            result += log(y) 
+
+    result = result / (len(text) - (length-1))
+    return result
+    ```
+
+
 ### Results using fitness value:
 
 * With the correct key:
@@ -251,7 +282,6 @@ Both of these method will generate a lot of plaintexts so we need a way to deter
 
     ############################################
     Result: -9.846180331805309
-
     ```
 *   With two wrong keys
     ```
@@ -292,5 +322,9 @@ For length 2 the value is -5.507750202751678
 
 ############################################
 Result: -5.445160899655718
-
 ```
+
+
+## Putting it all together
+
+Now that we have a good way to figure out the lenght of a key, a way to bruteforce, a way to test our decryption results and computing power, the only thing we need is to put all these tools together
