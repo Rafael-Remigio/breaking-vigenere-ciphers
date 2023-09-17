@@ -44,6 +44,31 @@ For example:
 
 * The result will be ***eteefucymdokyrolugmddavscfhswmzmoag***
 
+## Before encryption
+
+Before encrypting a plain text with a key its important to clean and standardize them to use the same alphabet.
+Example: 
+
+```
+Yes, I'm officially on vacation. I will be on vacation for five glorious days because I am clever. I am smart and have actually managed to schedule several of these 4-5 day vacations through the rest of the year.
+
+I have two days off during the week because working the weekends if fucking ridiculously easy and I can't believe more people don't want to do it. But that's okay, we won't say shit to them about how wonderful it is. We'll continue to tell them how horrid it is, "Oh yah, working the weekend while everyone else is off and out and about doing their thing...man it totally sucks!"
+```
+
+Should be cleaned to be represented like this: 
+
+```
+YESIMOFFICIALLYONVACATIONIWILLBEONVACATIONFORFIVEGLORIOUSDAYSBECAUSEIAMCLEVERIAMSMARTANDHAVEACTUALLYMANAGEDTOSCHEDULESEVERALOFTHESEDAYVACATIONSTHROUGHTHERESTOFTHEYEARIHAVETWODAYSOFFDURINGTHEWEEKBECAUSEWORKINGTHEWEEKENDSIFFUCKINGRIDICULOUSLYEASYANDICANTBELIEVEMOREPEOPLEDONTWANTTODOITBUTTHATSOKAYWEWONTSAYSHITTOTHEMABOUTHOWWONDERFULITISWELLCONTINUETOTELLTHEMHOWHORRIDITISOHYAHWORKINGTHEWEEKENDWHILEEVERYONEELSEISOFFANDOUTANDABOUTDOINGTHEIRTHINGMANITTOTALLYSUCKS
+```
+
+There is a python script available that will do just this.
+
+Usage:
+```
+$ python3 plain_text_cleaner.py dirtyExample.txt 
+
+YESIMOFFI(...)TTOTALLYSUCKS
+```
 
 ## Encryption 
 Function example
@@ -66,8 +91,7 @@ def encrypt(plaintext: str, key: str) -> str:
 
     return ciphertext
 ```
-Usage
-
+Usage:
 ```
 $ python3 vigenere_encryption.py cleanPlainText/wikipediaExample.txt LMAO 
 
@@ -95,7 +119,7 @@ def decrypt(ciphertext: str, key: str) -> str:
     return plaintext
 ```
 
-Usage
+Usage:
 ```
 $ python3 vigenere_decryption.py ciphertext LMAO
 
