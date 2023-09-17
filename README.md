@@ -1,4 +1,4 @@
-# breaking-vigenere-ciphers
+# Breaking-vigenere-ciphers
 An example of classical cryptography and how to break polyalphabetic ciphers such as Vigenère's cipher
 
 
@@ -128,11 +128,11 @@ THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG
 
 
 
-# Breaking PolyAlphabetic Ciphers
+# Breaking PolyAlphabetic Ciphers (The fun part)
 
 ## Finding the Key Length
 
-Kasiki's test and the index of coincidence are used to attack a Vigenère cipher (or other polyalphabetic ciphers with small alphabet and small key size) - they both try to get the length of the keyword.
+Kasiki's test and the index of coincidence are used to attack a Vigenère cipher (or other polyalphabetic ciphers with small alphabet and small key size) - they both try to get the length of the key.
 
 ### Kasiki's Test
 
@@ -225,21 +225,72 @@ qt5ct: using qt5ct plugin
 We can conclud that the key is probably 5.
 
 
-## We got the period, now what?
+## We got the key size or period, now what?
 
 Well there are two approaches now:
 * **Pure Brute-Force**
 * **Dictionary Attacks** (only usefull if we know the key is a word)
 
-Both of these method will generate a lot of plaintexts so we need a way to determine if the decryption worked and we generated english text. For this there I also see two solutions:
+Both of these method will generate a lot of plaintexts so we need a way to determine if the decryption worked and we generated english text. This is because decrypting by a certain key always gives a result but how do we know this is an actual text and not just gibberish. For this there I also see two solutions:
 * Parse the text and validate if we find a large number of english words in it. If so it's probably english
 * The other method is calculating the ***fitness*** of a given text. (Again I am "stealing" this from Five Ways to Crack a Vigenère Cipher by The Mad Doctor ("madness")). As defined in the paper: 
     ``` 
-    Fitness is a way to quantify how closely a piece of text resembles English text. One way to do this is to
-    compare the frequencies of tetragrams in the text with the frequency table that we built in the last
-    section. It turns out that throwing in a logarithm helps, too. The basic idea is to start with zero and add
-    the log of the value from our table for each tetragram that we find in the text that we are evaluating,
-    then divide by the number of tetragrams to get an average. The average is more useful than the total
-    because it allows our programs to make decisions independent of the length of the text. Defined in this
-    way, the fitness of English texts is typically around -9.6." 
+    Fitness is a way to quantify how closely a piece of text resembles English text. One way to do this is to compare the frequencies of tetragrams in the text with the frequency table that we built in the last section. It turns out that throwing in a logarithm helps, too. The basic idea is to start with zero and add the log of the value from our table for each tetragram that we find in the text that we are evaluating, then divide by the number of tetragrams to get an average. The average is more useful than the total because it allows our programs to make decisions independent of the length of the text. Defined in this way, the fitness of English texts is typically around -9.6." 
     ```
+    In the paper it is done with tetagrams but it can also be preformed with other length of combinations. 
+
+
+### Results using fitness value:
+
+* With the correct key:
+    ```
+    $ python3 calculate_text_fitness.py booksInTXT/moby_dick_cleaned.txt ciphertext CTFUA 4
+    Baseline Fitness value for Romeo and Juliet book
+    ############################################
+    For length 4 the value is -10.081385699634122
+
+    ############################################
+    Result: -9.846180331805309
+
+    ```
+*   With two wrong keys
+    ```
+    $ python3 calculate_text_fitness.py booksInTXT/moby_dick_cleaned.txt ciphertext FOSSF 4
+    Baseline Fitness value for Romeo and Juliet book
+    ############################################
+    For length 4 the value is -10.081385699634122
+
+    ############################################
+    Result: -14.785694902654228
+    ```
+    ```
+    $ python3 calculate_text_fitness.py booksInTXT/moby_dick_cleaned.txt ciphertext CATDJ 4
+    Baseline Fitness value for Romeo and Juliet book
+    ############################################
+    For length 4 the value is -10.081385699634122
+
+    ############################################
+    Result: -14.698750556586873
+    ```
+
+
+After some testing using length of 2 to test fitness is also a good approach:
+
+```
+$ python3 calculate_text_fitness.py booksInTXT/moby_dick_cleaned.txt ciphertext CATDJ 2
+Baseline Fitness value for Romeo and Juliet book
+############################################
+For length 2 the value is -5.507750202751678
+
+############################################
+Result: -9.028962615408085
+
+$ python3 calculate_text_fitness.py booksInTXT/moby_dick_cleaned.txt ciphertext CTFUA 2
+Baseline Fitness value for Romeo and Juliet book
+############################################
+For length 2 the value is -5.507750202751678
+
+############################################
+Result: -5.445160899655718
+
+```
