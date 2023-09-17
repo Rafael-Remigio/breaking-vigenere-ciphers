@@ -9,6 +9,7 @@ def encrypt(plaintext: str, key: str) -> str:
     for i in range(len(plaintext)):
         letter = ALPHABET.index(plaintext[i])  # get character alphabet index
 
+        # iterate throught the key in a Round Robin fashion 
         shift_size = ALPHABET.index(key[i % len(key)]) # get shift value from key value and position
 
         new_letter = (letter + shift_size) % 26 # preform shift

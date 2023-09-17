@@ -11,6 +11,7 @@ def decrypt(ciphertext: str, key: str) -> str:
 
         shift_value = ALPHABET.index(key[i%len(key)]) # get shift value from key value and position
 
+        # iterate throught the key in a Round Robin fashion 
         char = (letter - shift_value) % 26 # preform inverse shift
 
         plaintext += ALPHABET[char]
