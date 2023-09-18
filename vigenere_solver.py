@@ -11,6 +11,11 @@ def plotIoC(frequencies):
     plt.bar(range(len(frequencies)), values, tick_label=names)
     plt.show()
 
+
+def brute_force(ciphertext,length,baseline_fitness):
+    pass
+
+
 if __name__ == "__main__":
 
     # get args from command line
@@ -77,8 +82,13 @@ if __name__ == "__main__":
         for line in file:
             romeo_and_juliet += line.rstrip()
 
+    
+
 
     base_line_fitness_value = fitness(baseline_text,romeo_and_juliet,length)
     print("Baseline Fitness value for Romeo and Juliet book")
     print("For length "+ str(length) + " the value is "+ str(base_line_fitness_value))
     print("############################################")
+
+
+    brute_force(ciphertext,length,base_line_fitness_value)
