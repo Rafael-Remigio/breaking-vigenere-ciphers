@@ -30,6 +30,26 @@ def fitness(base_line_text: str,text:str,length:int):
     return result
 
 
+def fitness_with_frequencies(text:str,length:int,baseline_frequencies):
+    
+    result = 0
+    
+    for i in range(len(text)-(length-1)):
+        # generate tetragram, trigram, (...), from current position
+        xgram = text[i:i+length]
+
+        # get frequencies of such xgram
+        if xgram not in  baseline_frequencies:
+            result += -15 # some large negative number
+        else:
+            y = baseline_frequencies.get(xgram)
+            result += log(y) 
+
+    result = result / (len(text) - (length-1))
+    return result
+
+
+
 if __name__ == "__main__":
 
     # get args from command line

@@ -1,8 +1,13 @@
+import itertools
 import sys
 import matplotlib.pyplot as plt
-from calculate_text_fitness import fitness
+from calculate_text_fitness import fitness, fitness_with_frequencies
+from frequency_calculator import calculateFrequencies
 from key_length_calculation import index_of_coincidence_for_key_lengths
+from vigenere_decryption import decrypt
 
+# Alphabet used only contains CAPPS letters
+ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 def plotIoC(frequencies):
     names = list(frequencies.keys())
@@ -12,8 +17,32 @@ def plotIoC(frequencies):
     plt.show()
 
 
-def brute_force(ciphertext,length,baseline_fitness):
-    pass
+def brute_force(ciphertext,password_length,fitness_length,baseline_fitness,baseline_text):
+    attempts = 0
+    dictionary = {}
+
+    baseline_frequencies = calculateFrequencies(baseline_text,fitness_length)
+
+
+    print("Number of keys to bruteforce:", 26**password_length)
+    
+
+    for key in itertools.product(ALPHABET, repeat=password_length):
+        attempts +=1
+        if (attempts%100000 == 0):
+            print("Number of attempts", attempts/( 26**password_length))
+        key = ''.join(key)
+        plain_text_guess = decrypt(ciphertext,key)
+
+        plain_text_fitness = fitness_with_frequencies(plain_text_guess,fitness_length,baseline_frequencies=baseline_frequencies)
+
+        if baseline_fitness + 1 > plain_text_fitness > baseline_fitness - 1:
+            print(key,plain_text_fitness)
+
+        dictionary[key] = plain_text_fitness
+
+    return dictionary
+
 
 
 if __name__ == "__main__":
@@ -54,7 +83,7 @@ if __name__ == "__main__":
     print("Input should be integers and written as length1,length2:")
     lengths = input()  
 
-    lengths = [int(i) for i in lengths.split(",")]
+    lengths_to_brute_force = [int(i) for i in lengths.split(",")]
 
     print("############################################")
     print("Insert a language baseline, this must be a large text for the language we are trying to decrypt to:")
@@ -62,8 +91,7 @@ if __name__ == "__main__":
     baseLineInpput = input("File name: ")
 
     baseline_text = ""
-    book = argv[1]
-    with open(book) as file:
+    with open(baseLineInpput) as file:
         for line in file:
             baseline_text += line.rstrip()
 
@@ -71,7 +99,7 @@ if __name__ == "__main__":
     print("############################################")
     print("Insert length to calculate fitness with")
     print("(Recommended is 2 or 4)")
-    length = int(input())
+    fitness_length = int(input())
  
     print()
     print("############################################")
@@ -85,10 +113,11 @@ if __name__ == "__main__":
     
 
 
-    base_line_fitness_value = fitness(baseline_text,romeo_and_juliet,length)
+    base_line_fitness_value = fitness(baseline_text,romeo_and_juliet,fitness_length)
     print("Baseline Fitness value for Romeo and Juliet book")
-    print("For length "+ str(length) + " the value is "+ str(base_line_fitness_value))
+    print("For length "+ str(fitness_length) + " the value is "+ str(base_line_fitness_value))
     print("############################################")
 
+    for password_length in lengths_to_brute_force:
 
-    brute_force(ciphertext,length,base_line_fitness_value)
+        print(brute_force(ciphertext,password_length,fitness_length,base_line_fitness_value,baseline_text))
