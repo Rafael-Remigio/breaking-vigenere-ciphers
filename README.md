@@ -327,4 +327,7 @@ Result: -5.445160899655718
 
 ## Putting it all together
 
-Now that we have a good way to figure out the lenght of a key, a way to bruteforce, a way to test our decryption results and computing power, the only thing we need is to put all these tools together
+Now that we have a good way to figure out the lenght of a key, we know how to simply bruteforce, computing power and a way to test our decryption results, the only thing we need is to put all these tools together.
+
+
+
