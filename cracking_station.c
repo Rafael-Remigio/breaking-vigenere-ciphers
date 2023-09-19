@@ -55,6 +55,32 @@ double calculateFitness(const char *text, long length_text, double *tetrafrequen
     return result;
 }
 
+
+char* decrypt(char* plaintext, char* key, int key_length, char* ciphertext,int ciphertext_length){
+    unsigned int i, j;
+    int value;
+    for (i = 0, j = 0; i < ciphertext_length; i++, j++){
+        if (j >= key_length){
+            j = 0;
+        }
+        value = (ciphertext[i]) - (key[j]);
+        if (value < 0){
+            value = value + 26;
+        }
+        plaintext[i] = value + 65;
+        printf("%d\n",value + 65);
+    }
+    return plaintext;
+}
+
+void bruteforce(int key_lenght){
+    char key[key_lenght];
+    for (int i = 0; i< pow(26,key_lenght);i++)
+    {
+        
+    }
+}
+
 int main()
 {
 
@@ -103,7 +129,34 @@ int main()
 
     double romeo_juliet_fitness = calculateFitness(languageBaselineExampleText,languageBaselineExampleLength,languageTetrafrequencies);
 
-    printf("Fitness  is %f: " , romeo_juliet_fitness);
+    printf("Fitness of Romeo and Juliet is: %f: " , romeo_juliet_fitness);
+
+
+
+    char *ciphertextFile = "ciphertexts/example_3.txt";
+    char *ciphertext = 0;
+    long ciphertextLength;
+    FILE *f_ciphertextFile = fopen(ciphertextFile, "rb");
+
+    if (f_ciphertextFile)
+    {
+        fseek(f_ciphertextFile, 0, SEEK_END);
+        ciphertextLength = ftell(f_ciphertextFile);
+        fseek(f_ciphertextFile, 0, SEEK_SET);
+        ciphertext = malloc(ciphertextLength);
+        if (ciphertext)
+        {
+            fread(ciphertext, 1, ciphertextLength, f_ciphertextFile);
+        }
+        fclose(f_ciphertextFile);
+    }
+
+
+
+
+    bruteforce();
+
+
 
     free(languageTetrafrequencies);
 
