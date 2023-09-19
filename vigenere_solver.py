@@ -39,9 +39,8 @@ def brute_force(ciphertext,password_length,fitness_length,baseline_fitness,basel
         if baseline_fitness + 0.5 > plain_text_fitness > baseline_fitness - 0.5:
             print(key,plain_text_fitness)
 
-        dictionary[key] = plain_text_fitness
 
-    return dictionary
+    return
 
 
 
