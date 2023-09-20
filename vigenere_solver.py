@@ -36,10 +36,20 @@ def brute_force(ciphertext,password_length,fitness_length,baseline_fitness,basel
 
         plain_text_fitness = fitness_with_frequencies(plain_text_guess,fitness_length,baseline_frequencies=baseline_frequencies)
 
-        if baseline_fitness + 0.5 > plain_text_fitness > baseline_fitness - 0.5:
-            print(key,plain_text_fitness)
+        print(key,plain_text_fitness)
+
+        if attempts == 10:
+            break
+
+    
+    plain_text_guess = decrypt(ciphertext,"CTFUA")
 
 
+    print("CTFUA",    fitness_with_frequencies(plain_text_guess,fitness_length,baseline_frequencies=baseline_frequencies)
+)
+
+
+    
     return
 
 

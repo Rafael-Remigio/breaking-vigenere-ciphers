@@ -68,17 +68,60 @@ char* decrypt(char* plaintext, char* key, int key_length, char* ciphertext,int c
             value = value + 26;
         }
         plaintext[i] = value + 65;
-        printf("%d\n",value + 65);
     }
     return plaintext;
 }
 
-void bruteforce(int key_lenght){
+void bruteforce(int key_lenght,double base_line,char* ciphertext, long ciphertext_length,double *languageTetrafrequencies){
     char key[key_lenght];
-    for (int i = 0; i< pow(26,key_lenght);i++)
-    {
-        
+    char *keyPointer = key;
+    for (int i = 0; i < key_lenght; i++){
+        key[i] = 'A';
     }
+    double result;
+    char *plaintext = 0;
+    plaintext = malloc(ciphertext_length);
+
+    for (int j = 0; j<pow(26,key_lenght);j++)
+    {   
+
+        // Very bad code reeeeeeeeee
+        // it works none the less
+        int n = j;
+        int i = 0;
+        while (n >= 0) {
+            // storing remainder in binary array
+            key[(key_lenght - 1)-i] = n % 26 + 65;
+            n = n / 26;
+
+           
+            if (n == 0){
+                break;
+            }
+            i++;
+        }
+
+        decrypt(plaintext,keyPointer,key_lenght,ciphertext,ciphertext_length);
+
+
+        result = calculateFitness(plaintext, ciphertext_length, languageTetrafrequencies);
+
+        printf("Frequecies for %s: %f\n" , key, result);
+
+        if (j == 10){
+            break;
+        }
+    }
+
+    char correctKey[] = "CTFUA";
+
+    decrypt(plaintext,correctKey,key_lenght,ciphertext,ciphertext_length);
+
+
+    result = calculateFitness(plaintext, ciphertext_length, languageTetrafrequencies);
+
+    printf("Frequecies for %s: %f\n" , correctKey, result);
+    
 }
 
 int main()
@@ -133,7 +176,7 @@ int main()
 
 
 
-    char *ciphertextFile = "ciphertexts/example_3.txt";
+    char *ciphertextFile = "ciphertexts/english_example_3_encrypted";
     char *ciphertext = 0;
     long ciphertextLength;
     FILE *f_ciphertextFile = fopen(ciphertextFile, "rb");
@@ -153,8 +196,7 @@ int main()
 
 
 
-
-    bruteforce();
+    bruteforce(5,romeo_juliet_fitness,ciphertext,ciphertextLength,languageTetrafrequencies);;
 
 
 
