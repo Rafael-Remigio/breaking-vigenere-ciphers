@@ -8,7 +8,7 @@ array = [] # Array will contain all the clean lines
 # clean and remove all characters that do not bellong to the alphabet and make them all uppercase
 def cleanFromFile(input_file_string : str) -> str:
 	# Open file and parse it
-	with open(input_file_string , "r") as input_file:
+	with open(input_file_string , "r",encoding = "ISO-8859-1") as input_file:
 
 
 

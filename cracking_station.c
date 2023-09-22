@@ -56,8 +56,8 @@ double calculateFitness(const char *text, long length_text, double *tetrafrequen
 }
 
 
-char* decrypt(char* plaintext, char* key, int key_length, char* ciphertext,int ciphertext_length){
-    unsigned int i, j;
+char* decrypt(char* plaintext, char* key, long key_length, char* ciphertext,int ciphertext_length){
+    unsigned long i, j;
     int value;
     for (i = 0, j = 0; i < ciphertext_length; i++, j++){
         if (j >= key_length){
@@ -81,9 +81,11 @@ void bruteforce(int key_lenght,double base_line,char* ciphertext, long ciphertex
     double result;
     char *plaintext = 0;
     plaintext = malloc(ciphertext_length);
-
+    int length = pow(26,key_lenght);
+    
     for (int j = 0; j<pow(26,key_lenght);j++)
-    {   
+    {      
+
 
         // Very bad code reeeeeeeeee
         // it works none the less
@@ -103,24 +105,19 @@ void bruteforce(int key_lenght,double base_line,char* ciphertext, long ciphertex
 
         decrypt(plaintext,keyPointer,key_lenght,ciphertext,ciphertext_length);
 
-
         result = calculateFitness(plaintext, ciphertext_length, languageTetrafrequencies);
 
-        printf("Frequecies for %s: %f\n" , key, result);
 
-        if (j == 10){
-            break;
+        if ( base_line + 1 >result  && result > base_line - 1){
+            printf("Frequecies for %s: %f\n" , key, result);
+            printf("%s" , plaintext);
         }
+
+    
     }
 
-    char correctKey[] = "CTFUA";
+    free(plaintext);
 
-    decrypt(plaintext,correctKey,key_lenght,ciphertext,ciphertext_length);
-
-
-    result = calculateFitness(plaintext, ciphertext_length, languageTetrafrequencies);
-
-    printf("Frequecies for %s: %f\n" , correctKey, result);
     
 }
 
@@ -163,7 +160,7 @@ int main()
         fclose(f_languageBaselineExample);
     }
 
-    int array_size = 26 * 26 * 26 * 26;
+    long array_size = 26 * 26 * 26 * 26;
 
     double *languageTetrafrequencies = malloc(26 * 26 * 26 * 26 * sizeof(double));
 
@@ -180,7 +177,6 @@ int main()
     char *ciphertext = 0;
     long ciphertextLength;
     FILE *f_ciphertextFile = fopen(ciphertextFile, "rb");
-
     if (f_ciphertextFile)
     {
         fseek(f_ciphertextFile, 0, SEEK_END);
@@ -194,9 +190,11 @@ int main()
         fclose(f_ciphertextFile);
     }
 
+    printf("here %ld",ciphertextLength);
 
 
-    bruteforce(5,romeo_juliet_fitness,ciphertext,ciphertextLength,languageTetrafrequencies);;
+
+    bruteforce(5,romeo_juliet_fitness,ciphertext,ciphertextLength  ,languageTetrafrequencies);;
 
 
 

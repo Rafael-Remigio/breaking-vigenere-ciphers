@@ -61,14 +61,25 @@ if __name__ == "__main__":
 
 
     baseline_text = ""
-    book = "booksInTXT/romeo_and_juliet_cleaned.txt"
+    book = "booksInTXT/maias_cleaned.txt"
     with open(book) as file:
         for line in file:
             baseline_text += line.rstrip()
     base_line_IoC = index_of_coincidence(baseline_text)
 
     print("Baseline IOC from book");
-    print("book: " + book + " IOC: " + str(base_line_IoC))
+    print("Portugues book: " + book + " IOC: " + str(base_line_IoC))
+
+
+    baseline_text = ""
+    book = "booksInTXT/moby_dick_cleaned.txt"
+    with open(book) as file:
+        for line in file:
+            baseline_text += line.rstrip()
+    base_line_IoC = index_of_coincidence(baseline_text)
+
+    print("Baseline IOC from book");
+    print("English book: " + book + " IOC: " + str(base_line_IoC))
 
     ciphertext = ""
     with open(input_file_string) as file:
