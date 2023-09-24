@@ -8,7 +8,7 @@ ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 def index_of_coincidence(text: str):
     counts = [0]*26
     for char in text:
-        counts[ALPHABET.index(char)] += 1
+        counts[ord(char) - 65] += 1
     number = 0
     total = 0
     for i in range(26):

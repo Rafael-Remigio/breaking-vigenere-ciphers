@@ -7,9 +7,9 @@ ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 def decrypt(ciphertext: str, key: str) -> str:
     plaintext = ''
     for i in range(len(ciphertext)):
-        letter = ALPHABET.index(ciphertext[i])  # get character alphabet index
+        letter = ord(ciphertext[i]) - 65  # get character alphabet index
 
-        shift_value = ALPHABET.index(key[i%len(key)]) # get shift value from key value and position
+        shift_value = ord(key[i%len(key)]) - 65 # get shift value from key value and position
 
         # iterate throught the key in a Round Robin fashion 
         char = (letter - shift_value) % 26 # preform inverse shift

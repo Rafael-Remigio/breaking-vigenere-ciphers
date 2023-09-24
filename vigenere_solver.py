@@ -5,9 +5,21 @@ from calculate_text_fitness import fitness, fitness_with_frequencies
 from frequency_calculator import calculateFrequencies
 from key_length_calculation import index_of_coincidence_for_key_lengths
 from vigenere_decryption import decrypt
+from multiprocessing import Pool
+import time
 
 # Alphabet used only contains CAPPS letters
 ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+BASELINE_FREQUENCIES = {}
+
+CIPHERTEXT = ""
+
+FTINESS_LENGTH = 0
+
+BASELINE_FITNESS = 0
+
+ATTEMPTS = 0;
 
 def plotIoC(frequencies):
     names = list(frequencies.keys())
@@ -18,35 +30,37 @@ def plotIoC(frequencies):
 
 
 def brute_force(ciphertext,password_length,fitness_length,baseline_fitness,baseline_text):
-    attempts = 0
-    dictionary = {}
 
-    baseline_frequencies = calculateFrequencies(baseline_text,fitness_length)
-
+    global BASELINE_FREQUENCIES, CIPHERTEXT,FTINESS_LENGTH ,BASELINE_FITNESS,ATTEMPTS
+    
+    BASELINE_FREQUENCIES = calculateFrequencies(baseline_text,fitness_length)
+    CIPHERTEXT = ciphertext
+    FTINESS_LENGTH = fitness_length
+    BASELINE_FITNESS = baseline_fitness
+    ATTEMPTS = 0
 
     print("Number of keys to bruteforce:", 26**password_length)
     
-
-    for key in itertools.product(ALPHABET, repeat=password_length):
-        attempts +=1
-        if (attempts%100000 == 0):
-            print("Number of attempts", attempts/( 26**password_length))
-        key = ''.join(key)
-        plain_text_guess = decrypt(ciphertext,key)
-
-        plain_text_fitness = fitness_with_frequencies(plain_text_guess,fitness_length,baseline_frequencies=baseline_frequencies)
-
-        print(key,plain_text_fitness)
-
-
-
-    
-
-
-
-    
+    iterable = itertools.product(ALPHABET, repeat=password_length)
+    time1 = time.perf_counter()
+    with Pool(4) as p:
+        p.map(function, iterable)
+        
+    print("time is ", time.perf_counter() - time1)
     return
 
+
+def function(key):
+    key = ''.join(key)
+    plain_text_guess = decrypt(CIPHERTEXT,key)
+
+    plain_text_fitness = fitness_with_frequencies(plain_text_guess,FTINESS_LENGTH,baseline_frequencies=BASELINE_FREQUENCIES)
+
+    if BASELINE_FITNESS +1 > plain_text_fitness > BASELINE_FITNESS -1:
+        print(key,plain_text_fitness)
+        
+
+    return
 
 
 if __name__ == "__main__":
