@@ -122,17 +122,26 @@ if __name__ == "__main__":
     print()
     print("############################################")
 
+
     # Calculate baseline of what a normal text should look like with such lenght
-    romeo_and_juliet = ""
-    with open("booksInTXT/romeo_and_juliet_cleaned.txt") as file:
+    base_line_book = ""
+    print("(Language, Portuguese 1, English 2)")
+    language = int(input())
+
+    baselinebook = ""
+    if language == 1:
+        baselinebook = "booksInTXT/collection_portuguese_cleaned.txt"
+    else: 
+        baselinebook = "booksInTXT/romeo_and_juliet_cleaned.txt"
+    with open(baselinebook) as file:
         for line in file:
-            romeo_and_juliet += line.rstrip()
+            base_line_book += line.rstrip()
 
     
 
 
-    base_line_fitness_value = fitness(baseline_text,romeo_and_juliet,fitness_length)
-    print("Baseline Fitness value for Romeo and Juliet book")
+    base_line_fitness_value = fitness(baseline_text,base_line_book,fitness_length)
+    print("Baseline Fitness value for "+ base_line_book)
     print("For length "+ str(fitness_length) + " the value is "+ str(base_line_fitness_value))
     print("############################################")
 
