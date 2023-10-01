@@ -1,12 +1,12 @@
 import itertools
 import sys
 import matplotlib.pyplot as plt
-from calculate_text_fitness import fitness, fitness_with_frequencies
 from frequency_calculator import calculateFrequencies
 from key_length_calculation import index_of_coincidence_for_key_lengths
 from vigenere_decryption import decrypt
-from multiprocessing import Pool
-import time
+from math import log
+from calculate_text_fitness import fitness
+
 
 # Alphabet used only contains CAPPS letters
 ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -42,19 +42,39 @@ def brute_force(ciphertext,password_length,fitness_length,baseline_fitness,basel
     print("Number of keys to bruteforce:", 26**password_length)
     
     iterable = itertools.product(ALPHABET, repeat=password_length)
-    time1 = time.perf_counter()
-    with Pool(4) as p:
-        p.map(function, iterable)
+
+    for i in iterable:
+
+        function(key=i)
         
-    print("time is ", time.perf_counter() - time1)
     return
+
+
+
+def fitness_with_frequencies(text:str,length:int):
+    
+    result = 0
+    
+    for i in range(len(text)-(length-1)):
+        # generate tetragram, trigram, (...), from current position
+        xgram = text[i:i+length]
+
+        # get frequencies of such xgram
+        if xgram not in  BASELINE_FREQUENCIES:
+            result += -15 # some large negative number
+        else:
+            y = BASELINE_FREQUENCIES.get(xgram)
+            result += log(y) 
+
+    result = result / (len(text) - (length-1))
+    return result
 
 
 def function(key):
     key = ''.join(key)
     plain_text_guess = decrypt(CIPHERTEXT,key)
 
-    plain_text_fitness = fitness_with_frequencies(plain_text_guess,FTINESS_LENGTH,baseline_frequencies=BASELINE_FREQUENCIES)
+    plain_text_fitness = fitness_with_frequencies(plain_text_guess,FTINESS_LENGTH)
 
     if BASELINE_FITNESS +1 > plain_text_fitness > BASELINE_FITNESS -1:
         print(key,plain_text_fitness)
@@ -141,7 +161,7 @@ if __name__ == "__main__":
 
 
     base_line_fitness_value = fitness(baseline_text,base_line_book,fitness_length)
-    print("Baseline Fitness value for "+ base_line_book)
+    print("Baseline Fitness value for "+ baselinebook)
     print("For length "+ str(fitness_length) + " the value is "+ str(base_line_fitness_value))
     print("############################################")
 
