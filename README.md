@@ -158,9 +158,8 @@ With this we can calculate the IoC of several text. A random text has an IoC clo
 
 Comparing this with our ciphertext we can subdivide it in periods and test the IoC of each period. This is, comparing the IoC of each letter at an interval equal to the proposed period
 
-The code for calculating the IoC is:
-
-<small>this code was taken from Five Ways to Crack a Vigenère Cipher by The Mad Doctor ("madness"), I liked it so i "stole" it</small>
+The follwing code calculated the IoC.
+This code was taken from Five Ways to Crack a Vigenère Cipher by The Mad Doctor ("madness"), because it is easy to understand.
 
 ```
 # Alphabet used only contains CAPPS letters
